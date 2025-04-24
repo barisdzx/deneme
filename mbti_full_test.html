@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MBTI Personality Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+    }
+    .question {
+      margin-bottom: 20px;
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    button {
+      margin: 5px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .a { background-color: #87ceeb; }
+    .b { background-color: #ffb6c1; }
+    .result {
+      margin-top: 20px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #007acc;
+    }
+  </style>
+</head>
+<body>
+  <h1>MBTI Personality Test</h1>
+  <div id="quiz"></div>
+  <div class="result" id="result"></div>
+
+  <script>
+    const descriptions = {
+      ISTJ: "The Inspector – Responsible and serious, you get things done.",
+      ISFJ: "The Protector – Loyal and warm-hearted, you care deeply.",
+      INFJ: "The Advocate – Insightful, inspiring, and driven by ideals.",
+      INTJ: "The Mastermind – Strategic and logical with a vision.",
+      ISTP: "The Crafter – Practical and independent, you solve problems creatively.",
+      ISFP: "The Artist – Gentle, sensitive, and expressive.",
+      INFP: "The Mediator – Thoughtful, imaginative, and value-driven.",
+      INTP: "The Thinker – Analytical, curious, and loves theories.",
+      ESTP: "The Dynamo – Energetic and fun-loving, a natural improviser.",
+      ESFP: "The Entertainer – Spontaneous, playful, and charming.",
+      ENFP: "The Campaigner – Enthusiastic, creative, and sociable.",
+      ENTP: "The Visionary – Quick-witted and loves exploring new ideas.",
+      ESTJ: "The Supervisor – Organized and likes being in control.",
+      ESFJ: "The Consul – Caring and popular, you thrive in social settings.",
+      ENFJ: "The Protagonist – Charismatic and inspiring leader.",
+      ENTJ: "The Commander – Bold and goal-oriented strategist."
+    };
+
+    const questions = [{"q": "You\u2019re at a party. What are you most likely doing?", "a": {"text": "Chatting with everyone!", "type": "E"}, "b": {"text": "Sticking with close friends.", "type": "I"}}, {"q": "Which appeals to you more?", "a": {"text": "Realistic stories", "type": "S"}, "b": {"text": "Fantasies and imagination", "type": "N"}}, {"q": "You prefer to make decisions based on\u2026", "a": {"text": "Logic", "type": "T"}, "b": {"text": "Feelings", "type": "F"}}, {"q": "Your workspace is usually\u2026", "a": {"text": "Organized", "type": "J"}, "b": {"text": "Messy but it works!", "type": "P"}}, {"q": "In a group project, you are the one who\u2026", "a": {"text": "Leads and delegates", "type": "E"}, "b": {"text": "Does your part quietly", "type": "I"}}, {"q": "You trust\u2026", "a": {"text": "Facts and experience", "type": "S"}, "b": {"text": "Intuition and hunches", "type": "N"}}, {"q": "When arguing, you usually\u2026", "a": {"text": "Stay logical", "type": "T"}, "b": {"text": "Care about not hurting feelings", "type": "F"}}, {"q": "Your plans are usually\u2026", "a": {"text": "Well-structured", "type": "J"}, "b": {"text": "Flexible", "type": "P"}}, {"q": "Which one sounds like you?", "a": {"text": "Life of the party", "type": "E"}, "b": {"text": "Observer in the corner", "type": "I"}}, {"q": "Which do you prefer?", "a": {"text": "Step-by-step instructions", "type": "S"}, "b": {"text": "Trying things on your own", "type": "N"}}, {"q": "What\u2019s more important to you?", "a": {"text": "Justice", "type": "T"}, "b": {"text": "Compassion", "type": "F"}}, {"q": "How do you feel about deadlines?", "a": {"text": "Respect and follow them", "type": "J"}, "b": {"text": "Last minute magic!", "type": "P"}}, {"q": "In a new place, you\u2026", "a": {"text": "Talk to locals right away", "type": "E"}, "b": {"text": "Observe quietly first", "type": "I"}}, {"q": "Do you prefer\u2026", "a": {"text": "Facts", "type": "S"}, "b": {"text": "Ideas", "type": "N"}}, {"q": "When deciding, you go with\u2026", "a": {"text": "Your head", "type": "T"}, "b": {"text": "Your heart", "type": "F"}}, {"q": "Do you like plans or surprises?", "a": {"text": "Plans!", "type": "J"}, "b": {"text": "Surprises!", "type": "P"}}, {"q": "When meeting new people\u2026", "a": {"text": "You introduce yourself", "type": "E"}, "b": {"text": "You wait to be approached", "type": "I"}}, {"q": "You\u2019d rather\u2026", "a": {"text": "Work with concrete details", "type": "S"}, "b": {"text": "Explore abstract theories", "type": "N"}}, {"q": "You admire people who are\u2026", "a": {"text": "Rational", "type": "T"}, "b": {"text": "Kind", "type": "F"}}, {"q": "How do you feel about spontaneity?", "a": {"text": "Unsettling", "type": "J"}, "b": {"text": "Exciting!", "type": "P"}}, {"q": "In conversations, you\u2026", "a": {"text": "Talk a lot", "type": "E"}, "b": {"text": "Listen more", "type": "I"}}, {"q": "You like to\u2026", "a": {"text": "Stick to the tried and true", "type": "S"}, "b": {"text": "Experiment and innovate", "type": "N"}}, {"q": "You believe truth is\u2026", "a": {"text": "Objective", "type": "T"}, "b": {"text": "Subjective", "type": "F"}}, {"q": "You are more\u2026", "a": {"text": "Scheduled", "type": "J"}, "b": {"text": "Go-with-the-flow", "type": "P"}}, {"q": "At an event, you\u2026", "a": {"text": "Mingle easily", "type": "E"}, "b": {"text": "Need to warm up first", "type": "I"}}, {"q": "Your dreams are usually\u2026", "a": {"text": "Literal", "type": "S"}, "b": {"text": "Symbolic", "type": "N"}}, {"q": "You value more\u2026", "a": {"text": "Truth", "type": "T"}, "b": {"text": "Harmony", "type": "F"}}, {"q": "To-do lists are\u2026", "a": {"text": "Essential!", "type": "J"}, "b": {"text": "Optional", "type": "P"}}, {"q": "You\u2019re energized by\u2026", "a": {"text": "Being with others", "type": "E"}, "b": {"text": "Time alone", "type": "I"}}, {"q": "You rely on\u2026", "a": {"text": "Experience", "type": "S"}, "b": {"text": "Gut feeling", "type": "N"}}, {"q": "When solving a problem\u2026", "a": {"text": "You look at the facts", "type": "T"}, "b": {"text": "You consider people's feelings", "type": "F"}}, {"q": "You approach life\u2026", "a": {"text": "With a plan", "type": "J"}, "b": {"text": "With openness", "type": "P"}}]  // Replaced to save space in this display
+
+    let index = 0;
+    const scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+
+    function showQuestion() {
+      if (index >= questions.length) return showResult();
+      const q = questions[index];
+      const container = document.getElementById("quiz");
+      container.innerHTML = `
+        <div class="question">
+          <p><strong>Question ${index + 1}:</strong> ${q.q}</p>
+          <button class="a" onclick="answer('${q.a.type}')">${q.a.text}</button>
+          <button class="b" onclick="answer('${q.b.type}')">${q.b.text}</button>
+        </div>
+      `;
+    }
+
+    function answer(type) {
+      scores[type]++;
+      index++;
+      showQuestion();
+    }
+
+    function showResult() {
+      const mbti =
+        (scores.E >= scores.I ? "E" : "I") +
+        (scores.S >= scores.N ? "S" : "N") +
+        (scores.T >= scores.F ? "T" : "F") +
+        (scores.J >= scores.P ? "J" : "P");
+      const resultText = descriptions[mbti] || "Interesting mix!";
+      document.getElementById("quiz").innerHTML = "";
+      document.getElementById("result").innerHTML = `You are: <strong>${mbti}</strong><br>${resultText}`;
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
